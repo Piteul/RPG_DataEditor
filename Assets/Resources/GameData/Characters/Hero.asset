@@ -1,0 +1,30 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe51afb8a5249764fa2ed94a3a50c043, type: 3}
+  m_Name: Hero
+  m_EditorClassIdentifier: 
+  name: Hero
+  characterClass: 2
+  HP: 25
+  MP: 5
+  attack: 7
+  defence: 5
+  inventory:
+  - {fileID: 11400000, guid: 87817386be73f1c438a154a49a179bc4, type: 2}
+  - {fileID: 11400000, guid: fb053d4dd387ed448be015e82c920f57, type: 2}
+  - {fileID: 11400000, guid: bcd0e1b441851be458735f137cc04f18, type: 2}
+  - {fileID: 11400000, guid: bcd0e1b441851be458735f137cc04f18, type: 2}
+  - {fileID: 11400000, guid: 2008076b52219dc4d9e1c081474d4fd8, type: 2}
+  spells:
+  - {fileID: 11400000, guid: 87bae93bed11dee4c9694c2e9f34a7de, type: 2}
+  - {fileID: 11400000, guid: 72cf48927c727be40aa456ccea6ab487, type: 2}
+  - {fileID: 11400000, guid: cfc9b4a81d859bf4e9aec2b859b15f92, type: 2}

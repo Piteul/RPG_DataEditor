@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe51afb8a5249764fa2ed94a3a50c043, type: 3}
+  m_Name: Borya
+  m_EditorClassIdentifier: 
+  name: Borya
+  characterClass: 1
+  HP: 16
+  MP: 10
+  attack: 3
+  defence: 6
+  inventory:
+  - {fileID: 11400000, guid: b2118c3e3da423440a2c55ceffb8d622, type: 2}
+  - {fileID: 11400000, guid: 3747e2bb4d2b5b244ab4e666bba6b5fd, type: 2}
+  - {fileID: 11400000, guid: bcd0e1b441851be458735f137cc04f18, type: 2}
+  - {fileID: 11400000, guid: bcd0e1b441851be458735f137cc04f18, type: 2}
+  - {fileID: 11400000, guid: bcd0e1b441851be458735f137cc04f18, type: 2}
+  spells:
+  - {fileID: 11400000, guid: d93b52acb51bc6b4a91471702e5a8204, type: 2}
+  - {fileID: 11400000, guid: 2ce8825f9c382ee4b9a3fe59bcde4f79, type: 2}
+  - {fileID: 11400000, guid: cfc9b4a81d859bf4e9aec2b859b15f92, type: 2}
+  - {fileID: 11400000, guid: 970dc686bd416164faad78ecce669813, type: 2}
+  - {fileID: 11400000, guid: 72cf48927c727be40aa456ccea6ab487, type: 2}
