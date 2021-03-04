@@ -4,13 +4,19 @@ using UnityEngine;
 using UnityEditor;
 using System;
 using System.Reflection;
+using UnityEngine.UI;
+using System.IO;
 
+/// <summary>
+/// The Data Editor Tool allows you to create and manage different types of data, and to save them in ScriptableObjects.
+/// This class manages the creation and management of this tool.
+/// </summary>
 public class DataEditorTool : EditorWindow
 {
     Color defaultGUIColor;
-    Vector2 scrollPosition;
     static string mainFolderPath = "Assets/Resources/GameData";
 
+    //Contains the respective assets created
     Dictionary<int, Character> characterDict = new Dictionary<int, Character>();
     Dictionary<int, Item> itemDict = new Dictionary<int, Item>();
     Dictionary<int, Spell> spellDict = new Dictionary<int, Spell>();
@@ -24,14 +30,16 @@ public class DataEditorTool : EditorWindow
 
     //Grid
     static int dataSelectedIndex = 0;
-    List<int> gridID;
-    List<string> gridName;
+    //Use to easily find the selected grid element ID
+    List<int> gridID = new List<int>();
+    //Use to display the grid elements
+    List<string> gridName = new List<string>();
 
+    bool isInEditMode = false;
 
     [MenuItem("Tools/Data Editor Tool")]
     static void Init()
     {
-
         DataEditorTool window = (DataEditorTool)GetWindow(typeof(DataEditorTool));
         window.Show();
 
@@ -48,7 +56,6 @@ public class DataEditorTool : EditorWindow
                 AssetDatabase.CreateFolder(mainFolderPath, dataCategoryString);
             }
         }
-
     }
 
     private void OnEnable()
@@ -67,6 +74,7 @@ public class DataEditorTool : EditorWindow
     {
         defaultGUIColor = GUI.color;
 
+        //Title / Description
         GUILayout.Space(10);
         GUILayout.Label("Data Editor Tool", EditorStyles.boldLabel);
         GUILayout.Space(5);
@@ -76,98 +84,38 @@ public class DataEditorTool : EditorWindow
         //Generate Buttons
         GUILayout.BeginHorizontal();
 
-        GUI.color = Color.green;
-        if (GUILayout.Button("Add"))
-        {
-            //string dataCategory = toolbarStrings[toolbarIndex];
-            dataCategory = (DataCategory)toolbarIndex;
-            dynamic data = null;
+        GUI.enabled = !isInEditMode;
+        AddButton();
 
-            switch (dataCategory)
-            {
-                case DataCategory.Characters:
-                    data = ScriptableObject.CreateInstance<Character>();
-                    break;
-                case DataCategory.Items:
-                    data = ScriptableObject.CreateInstance<Item>();
-                    break;
-                case DataCategory.Spells:
-                    data = ScriptableObject.CreateInstance<Spell>();
-                    break;
-                default:
-                    break;
-            }
-
-            if (data != null)
-            {
-                AssetDatabase.CreateAsset(data, mainFolderPath + "/" + dataCategory + "/" + data.id.ToString() + ".asset");
-                AssetDatabase.SaveAssets();
-                dataSelectedIndex = data.id;
-            }
-        }
-
-        GUI.enabled = (dataSelectedIndex >= 0);
-        GUI.color = Color.red;
-        if (GUILayout.Button("Remove"))
-        {
-            AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(gridID[dataSelectedIndex]));
-            dataSelectedIndex = -1;
-        }
-
-        GUI.color = Color.cyan;
-        if (GUILayout.Button("Duplicate"))
-        {
-            dataCategory = (DataCategory)toolbarIndex;
-            dynamic data = null;
-
-            switch (dataCategory)
-            {
-                case DataCategory.Characters:
-                    data = ScriptableObject.CreateInstance<Character>();
-                    break;
-                case DataCategory.Items:
-                    data = ScriptableObject.CreateInstance<Item>();
-                    break;
-                case DataCategory.Spells:
-                    data = ScriptableObject.CreateInstance<Spell>();
-                    break;
-                default:
-                    break;
-            }
-
-            if (data != null)
-            {
-                //TODO : Copy()
-                AssetDatabase.CreateAsset(data, mainFolderPath + "/" + dataCategory + "/" + data.id.ToString() + ".asset");
-                AssetDatabase.SaveAssets();
-                dataSelectedIndex = data.id;
-            }
-        }
-        GUI.enabled = true;
-
-        GUI.color = defaultGUIColor;
-        if (GUILayout.Button("Refresh"))
-        {
-            LoadDataList();
-            LoadGridStrings();
-            //Debug.Log("characterCount : " + characterDict.Count);
-            //Debug.Log("itemCount : " + itemDict.Count);
-            //Debug.Log("spellCount : " + spellDict.Count);
-        }
-
+        GUI.enabled = !isInEditMode && (dataSelectedIndex >= 0);
+        EditButton();
+        RemoveButton();
+        DuplicateButton();
+        RefreshButton();
 
         GUILayout.EndHorizontal();
 
-        GUI.color = defaultGUIColor;
+        GUI.enabled = !isInEditMode;
 
         //Generate Toolbar
         GUILayout.Space(5);
         toolbarIndex = GUILayout.Toolbar(toolbarIndex, toolbarStrings);
-
         GUILayout.Space(10);
-        GUILayout.Label("Elements : ");
 
-        DisplayDataList();
+        GUI.enabled = true;
+        EditorGUILayout.LabelField("", GUI.skin.horizontalSlider);
+
+        if (isInEditMode)
+        {
+            GUILayout.Space(20);
+            DisplayEditMode();
+        }
+        else
+        {
+            GUILayout.Label("Elements : ");
+            GUILayout.Space(5);
+            DisplayDataGrid();
+        }
 
         if (GUI.changed)
         {
@@ -175,26 +123,266 @@ public class DataEditorTool : EditorWindow
         }
     }
 
-    void DisplayDataList()
+    #region Buttons
+
+    /// <summary>
+    /// Create and add an asset.
+    /// </summary>
+    void AddButton()
+    {
+        GUI.color = Color.green;
+        if (GUILayout.Button("Add"))
+        {
+            dataCategory = (DataCategory)toolbarIndex;
+            dynamic data = null;
+
+            switch (dataCategory)
+            {
+                case DataCategory.Characters:
+                    data = ScriptableObject.CreateInstance<Character>();
+                    break;
+                case DataCategory.Items:
+                    data = ScriptableObject.CreateInstance<Item>();
+                    break;
+                case DataCategory.Spells:
+                    data = ScriptableObject.CreateInstance<Spell>();
+                    break;
+                default:
+                    break;
+            }
+
+            if (data != null)
+            {
+                AssetDatabase.CreateAsset(data, mainFolderPath + "/" + dataCategory + "/" + data.id.ToString() + ".asset");
+                AssetDatabase.SaveAssets();
+                dataSelectedIndex = data.id;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Triggers the edit mode of an asset.
+    /// </summary>
+    void EditButton()
+    {
+        GUI.color = Color.yellow;
+        if (GUILayout.Button("Edit"))
+        {
+            isInEditMode = true;
+        }
+    }
+
+    /// <summary>
+    /// Remove a asset.
+    /// </summary>
+    void RemoveButton()
+    {
+
+        GUI.color = Color.red;
+        if (GUILayout.Button("Remove"))
+        {
+            dataCategory = (DataCategory)toolbarIndex;
+
+            switch (dataCategory)
+            {
+                case DataCategory.Characters:
+                    break;
+                case DataCategory.Items:
+                    //Remove the item from all inventories
+                    Item itemToRemove;
+                    if (dataSelectedIndex >= 0 && itemDict.TryGetValue(gridID[dataSelectedIndex], out itemToRemove))
+                    {
+                        foreach (Character character in characterDict.Values)
+                            if (character.inventory.Contains(itemToRemove))
+                            {
+                                character.inventory.Remove(itemToRemove);
+                            }
+                    }
+                    break;
+                case DataCategory.Spells:
+                    //Remove the spell from all spells lists
+                    Spell spellToRemove;
+                    if (dataSelectedIndex >= 0 && spellDict.TryGetValue(gridID[dataSelectedIndex], out spellToRemove))
+                    {
+                        foreach (Character character in characterDict.Values)
+                            if (character.spells.Contains(spellToRemove))
+                            {
+                                character.spells.Remove(spellToRemove);
+                            }
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            AssetDatabase.DeleteAsset(AssetDatabase.GetAssetPath(gridID[dataSelectedIndex]));
+            dataSelectedIndex = -1;
+        }
+    }
+
+    /// <summary>
+    /// Create and save a duplicate of an asset.
+    /// </summary>
+    void DuplicateButton()
+    {
+        GUI.color = Color.cyan;
+        if (GUILayout.Button("Duplicate"))
+        {
+            dataCategory = (DataCategory)toolbarIndex;
+            dynamic data = null;
+            switch (dataCategory)
+            {
+                case DataCategory.Characters:
+                    Character characterToDuplicate;
+                    if (dataSelectedIndex >= 0 && characterDict.TryGetValue(gridID[dataSelectedIndex], out characterToDuplicate))
+                    {
+                        data = ScriptableObject.CreateInstance<Character>();
+                        data.GetCopy(characterToDuplicate);
+                    }
+                    break;
+                case DataCategory.Items:
+                    Item itemToDuplicate;
+                    if (dataSelectedIndex >= 0 && itemDict.TryGetValue(gridID[dataSelectedIndex], out itemToDuplicate))
+                    {
+                        data = ScriptableObject.CreateInstance<Item>();
+                        data.GetCopy(itemToDuplicate);
+                    }
+                    break;
+                case DataCategory.Spells:
+                    Spell spellToDuplicate;
+                    if (dataSelectedIndex >= 0 && spellDict.TryGetValue(gridID[dataSelectedIndex], out spellToDuplicate))
+                    {
+                        data = ScriptableObject.CreateInstance<Spell>();
+                        data.GetCopy(spellToDuplicate);
+                    }
+                    break;
+                default:
+                    break;
+            }
+
+            if (data != null)
+            {
+                //if name end by : name(I) where I is a int, increment I to to distinguish duplication
+                if (data.name[data.name.Length - 3].Equals('(') && data.name[data.name.Length - 1].Equals(')'))
+                {
+                    int index = (int)Char.GetNumericValue(data.name[data.name.Length - 2]);
+                    index++;
+                    char[] ch = data.name.ToCharArray();
+                    ch[data.name.Length - 2] = Convert.ToChar(index.ToString());
+                    data.name = new string(ch);
+                }
+                else
+                {
+                    data.name += "(1)";
+                }
+
+                AssetDatabase.CreateAsset(data, mainFolderPath + "/" + dataCategory + "/" + data.name + ".asset");
+                AssetDatabase.SaveAssets();
+            }
+            dataSelectedIndex = -1;
+        }
+    }
+
+    /// <summary>
+    /// Refreshes the actually existing assets and updates the grid display.
+    /// </summary>
+    void RefreshButton()
+    {
+        GUI.color = defaultGUIColor;
+        if (GUILayout.Button("Refresh"))
+        {
+            LoadDataList();
+            LoadGridStrings();
+        }
+    }
+
+    #endregion
+
+    #region Display Panel
+
+    /// <summary>
+    /// Displays the edit window of the asset.
+    /// </summary>
+    void DisplayEditMode()
+    {
+        dataCategory = (DataCategory)toolbarIndex;
+
+        switch (dataCategory)
+        {
+            case DataCategory.Characters:
+                Character characterToEdit;
+                if (gridID.Count > 0 && dataSelectedIndex >= 0 && characterDict.TryGetValue(gridID[dataSelectedIndex], out characterToEdit))
+                {
+                    Editor.CreateEditor(characterToEdit).OnInspectorGUI();
+                }
+                break;
+            case DataCategory.Items:
+                Item itemToEdit;
+                if (gridID.Count > 0 && dataSelectedIndex >= 0 && itemDict.TryGetValue(gridID[dataSelectedIndex], out itemToEdit))
+                {
+                    Editor.CreateEditor(itemToEdit).OnInspectorGUI();
+                }
+                break;
+            case DataCategory.Spells:
+                Spell spellToEdit;
+                if (gridID.Count > 0 && dataSelectedIndex >= 0 && spellDict.TryGetValue(gridID[dataSelectedIndex], out spellToEdit))
+                {
+                    Editor.CreateEditor(spellToEdit).OnInspectorGUI();
+                }
+                break;
+            default:
+                break;
+        }
+
+        GUILayout.Space(20);
+        if (GUILayout.Button("Return"))
+        {
+            LoadDataList();
+            isInEditMode = false;
+            GUI.FocusControl(null);
+        }
+    }
+
+    /// <summary>
+    /// Displays available assets as a grid.
+    /// </summary>
+    void DisplayDataGrid()
     {
         if (gridName?.Count > 0)
         {
             GUILayout.BeginVertical("Box");
             dataSelectedIndex = GUILayout.SelectionGrid(dataSelectedIndex, gridName.ToArray(), 2);
-
-            //if (GUILayout.Button("Start"))
-            //{
-            //    Debug.Log("You chose " + gridName[dataSelectedIndex] + ", ID : " + gridID[dataSelectedIndex]);
-            //}
             GUILayout.EndVertical();
+        }
+        else
+        {
+            GUILayout.Space(10);
+            GUILayout.Label("Empty");
+            dataSelectedIndex = -1;
         }
     }
 
+    #endregion
+
+    #region Load Data
+
+    void ClearGrid()
+    {
+        if (gridID != null && gridName != null)
+        {
+            gridID.Clear();
+            gridName.Clear();
+        }
+    }
+
+    /// <summary>
+    /// Loads and updates the necessary lists for the grid.
+    /// </summary>
     void LoadGridStrings()
     {
         dataCategory = (DataCategory)toolbarIndex;
-        gridID.Clear();
-        gridName.Clear();
+
+        ClearGrid();
 
         switch (dataCategory)
         {
@@ -225,7 +413,9 @@ public class DataEditorTool : EditorWindow
         }
     }
 
-
+    /// <summary>
+    /// Loads and updates the lists containing the assets of respective categories.
+    /// </summary>
     void LoadDataList()
     {
 
@@ -253,6 +443,15 @@ public class DataEditorTool : EditorWindow
                         //Get class from asset
                         Character character = AssetDatabase.LoadAssetAtPath<Character>(assetPath);
                         characterDict[character.id] = character;
+
+                        character.CheckInventory();
+                        character.CheckSpells();
+
+                        //Rename the asset file if it does not have the generic name
+                        if (character.name != "No Name")
+                        {
+                            AssetDatabase.RenameAsset(assetPath, character.name);
+                        }
                     }
                     break;
                 case DataCategory.Items:
@@ -262,15 +461,26 @@ public class DataEditorTool : EditorWindow
                         var assetPath = AssetDatabase.GUIDToAssetPath(asset);
                         Item item = AssetDatabase.LoadAssetAtPath<Item>(assetPath);
                         itemDict[item.id] = item;
+
+                        if (item.name != "No Name")
+                        {
+                            AssetDatabase.RenameAsset(assetPath, item.name);
+                        }
                     }
                     break;
                 case DataCategory.Spells:
+
                     guidAssets = AssetDatabase.FindAssets("t:Spell", new[] { folderPath });
                     foreach (string asset in guidAssets)
                     {
                         var assetPath = AssetDatabase.GUIDToAssetPath(asset);
                         Spell spell = AssetDatabase.LoadAssetAtPath<Spell>(assetPath);
                         spellDict[spell.id] = spell;
+
+                        if (spell.name != "No Name")
+                        {
+                            AssetDatabase.RenameAsset(assetPath, spell.name);
+                        }
                     }
                     break;
                 default:
@@ -279,35 +489,18 @@ public class DataEditorTool : EditorWindow
         }
     }
 
-    //void LoadDataListOld()
-    //{
+    #endregion
 
-    //    characterDict.Clear();
-    //    itemDict.Clear();
-    //    spellDict.Clear();
-    //    string folderPath;
-    //    Type classType;
-    //    foreach (string categoryName in Enum.GetNames(typeof(DataCategory)))
-    //    {
-    //        folderPath = mainFolderPath + "/" + categoryName.ToString();
-    //        Debug.Log(folderPath);
-    //        classType = Type.GetType(categoryName);
-    //        Debug.Log(classType);
+    void Debug_printGrid()
+    {
+        for (int i = 0; i < gridID.Count; i++)
+        {
+            Debug.Log("Index: " + i + ", ID : " + gridID[i]);
+        }
 
-    //        //Get all guid of assets contains in folder path
-    //        string[] guidAssets = AssetDatabase.FindAssets("t:" + categoryName, new[] { folderPath });
-    //        foreach (string asset in guidAssets)
-    //        {
-    //            //Get path of th asset
-    //            var assetPath = AssetDatabase.GUIDToAssetPath(asset);
-    //            //Get class from asset
-    //            var character = AssetDatabase.LoadAssetAtPath(assetPath, classType);
-
-
-    //            characterList.Add(character);
-    //        }
-
-    //        Debug.Log(characterList.Count);
-    //    }   
-
+        Debug.Log("IsEqual : " + (gridID.Count == gridName.Count));
+        //Debug.Log("characterCount : " + characterDict.Count);
+        //Debug.Log("itemCount : " + itemDict.Count);
+        //Debug.Log("spellCount : " + spellDict.Count);
+    }
 }

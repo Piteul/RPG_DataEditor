@@ -18,15 +18,21 @@ public class Item : ScriptableObject
         SaveToString();
     }
 
+    public void GetCopy(Item it)
+    {
+        this.name = it.name;
+        this.description = it.description;
+        this.itemType = it.itemType;
+        SaveToString();
+    }
+
+    /// <summary>
+    /// Update and return the entity's definition in Json format
+    /// </summary>
+    /// <returns></returns>
     public string SaveToString()
     {
         jsonRepresentation = JsonUtility.ToJson(this);
         return jsonRepresentation;
     }
-
-    public Item Copy()
-    {
-        return (Item)this.MemberwiseClone();
-    }
-
 }

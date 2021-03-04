@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class Character : ScriptableObject
 {
     public enum Class { Warrior, Mage, Dancer, Thief }
@@ -16,7 +17,7 @@ public class Character : ScriptableObject
     public List<Item> inventory;
     public List<Spell> spells;
 
-    public string jsonRepresentation;
+    string jsonRepresentation;
 
     public Character()
     {
@@ -24,15 +25,51 @@ public class Character : ScriptableObject
         SaveToString();
     }
 
+    public void GetCopy(Character ch)
+    {
+        this.name = ch.name;
+        this.characterClass = ch.characterClass;
+        HP = ch.HP;
+        MP = ch.MP;
+        this.attack = ch.attack;
+        this.defence = ch.defence;
+        this.inventory = ch.inventory;
+        this.spells = ch.spells;
+
+        SaveToString();
+    }
+
+    /// <summary>
+    /// Update and return the entity's definition in Json format
+    /// </summary>
+    /// <returns></returns>
     public string SaveToString()
     {
         jsonRepresentation = JsonUtility.ToJson(this);
         return jsonRepresentation;
     }
 
-    public Character Copy()
+    /// <summary>
+    /// Check & remove items that no longer exist and that would have been deleted directly in folder
+    /// </summary>
+    public void CheckInventory()
     {
-        return (Character)this.MemberwiseClone();
+        if (this.inventory != null)
+        {
+            this.inventory.RemoveAll(item => !item);
+        }
+    }
+
+    /// <summary>
+    /// Check & remove spells that no longer exist and that would have been deleted directly in folder
+    /// </summary>
+    public void CheckSpells()
+    {
+        if (this.spells != null)
+        {
+            this.spells.RemoveAll(item => !item);
+        }
+
     }
 
 }

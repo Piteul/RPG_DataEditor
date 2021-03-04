@@ -18,15 +18,22 @@ public class Spell : ScriptableObject
         SaveToString();
     }
 
+    public void GetCopy(Spell sp)
+    {
+        this.name = sp.name;
+        this.description = sp.description;
+        this.spellType = sp.spellType;
+        SaveToString();
+    }
+
+    /// <summary>
+    /// Update and return the entity's definition in Json format
+    /// </summary>
+    /// <returns></returns>
     public string SaveToString()
     {
         jsonRepresentation = JsonUtility.ToJson(this);
         return jsonRepresentation;
-    }
-
-    public Spell Copy()
-    {
-        return (Spell)this.MemberwiseClone();
     }
 
 }
