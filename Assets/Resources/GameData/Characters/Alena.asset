@@ -10,13 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fe51afb8a5249764fa2ed94a3a50c043, type: 3}
-  m_Name: -23736
+  m_Name: Alena
   m_EditorClassIdentifier: 
-  name: No Name
-  characterClass: 0
-  HP: 0
-  MP: 0
-  attack: 0
-  defence: 0
-  inventory: []
-  spells: []
+  name: Alena
+  characterClass: 3
+  HP: 16
+  MP: 3
+  attack: 12
+  defence: 7
+  inventory:
+  - {fileID: 11400000, guid: 8546e41f1d2e79c46b31c60bc7c36671, type: 2}
+  - {fileID: 11400000, guid: 87817386be73f1c438a154a49a179bc4, type: 2}
+  - {fileID: 11400000, guid: bcd0e1b441851be458735f137cc04f18, type: 2}
+  - {fileID: 11400000, guid: fb053d4dd387ed448be015e82c920f57, type: 2}
+  spells:
+  - {fileID: 11400000, guid: cfc9b4a81d859bf4e9aec2b859b15f92, type: 2}
+  - {fileID: 11400000, guid: cb4bed10a435e184e84f710e4a018ced, type: 2}

@@ -36,6 +36,7 @@ public class DataEditorTool : EditorWindow
     List<string> gridName = new List<string>();
 
     bool isInEditMode = false;
+    Vector2 scrollPosition;
 
     [MenuItem("Tools/Data Editor Tool")]
     static void Init()
@@ -108,13 +109,18 @@ public class DataEditorTool : EditorWindow
         if (isInEditMode)
         {
             GUILayout.Space(20);
+            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
             DisplayEditMode();
+            EditorGUILayout.EndScrollView();
         }
         else
         {
             GUILayout.Label("Elements : ");
             GUILayout.Space(5);
+            scrollPosition = EditorGUILayout.BeginScrollView(scrollPosition);
             DisplayDataGrid();
+            EditorGUILayout.EndScrollView();
+
         }
 
         if (GUI.changed)
