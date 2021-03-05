@@ -56,8 +56,8 @@ Here is the list of available commands :
 
 ## Time Spent
 
-**Part 1 : Data Editor Tool** | 5h30
-**Part 2 : GUI and Prompt System** | 3h30
-**Documentation and set of prebuilt assets** | 0h30
+- **Part 1 : Data Editor Tool** | 5h30
+- **Part 2 : GUI and Prompt System** | 3h30
+- **Documentation and set of prebuilt assets** | 0h30
 
 **Total : 9h30**
