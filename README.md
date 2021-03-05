@@ -13,7 +13,7 @@ Although there is a semi-automatic data refresh, do not hesitate to use the Refr
 
 Finally, you find a set of prebuilt assets _to play with_.
 
-![RPGDataEditorTool1](Images\RPGDataEditorTool1.PNG "List Elements") ![RPGDataEditorTool2](Images\RPGDataEditorTool2.PNG "Edit Mode")
+![RPGDataEditorTool1](./Images/RPGDataEditorTool1.PNG "List Elements") ![RPGDataEditorTool2](Images\RPGDataEditorTool2.PNG "Edit Mode")
 
 ## How to Play
 
