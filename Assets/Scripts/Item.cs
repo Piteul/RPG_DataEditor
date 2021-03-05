@@ -6,6 +6,7 @@ public class Item : ScriptableObject
 {
     public enum Type { Weapon, Armour, Consumable}
     public int id { get { return this.GetInstanceID(); } }
+    public Sprite sprite;
     public new string name;
     public string description;
     public Type itemType;
@@ -20,6 +21,7 @@ public class Item : ScriptableObject
 
     public void GetCopy(Item it)
     {
+        this.sprite = it.sprite;
         this.name = it.name;
         this.description = it.description;
         this.itemType = it.itemType;
@@ -34,5 +36,12 @@ public class Item : ScriptableObject
     {
         jsonRepresentation = JsonUtility.ToJson(this);
         return jsonRepresentation;
+    }
+
+    public override string ToString()
+    {
+        return "Name : " + name + "\n" +
+        "Description : " + description + "\n" +
+        "Type : " + itemType.ToString();
     }
 }

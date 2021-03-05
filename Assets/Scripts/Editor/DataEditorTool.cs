@@ -452,6 +452,7 @@ public class DataEditorTool : EditorWindow
 
                         character.CheckInventory();
                         character.CheckSpells();
+                        character.SaveToString();
 
                         //Rename the asset file if it does not have the generic name
                         if (character.name != "No Name")
@@ -467,6 +468,7 @@ public class DataEditorTool : EditorWindow
                         var assetPath = AssetDatabase.GUIDToAssetPath(asset);
                         Item item = AssetDatabase.LoadAssetAtPath<Item>(assetPath);
                         itemDict[item.id] = item;
+                        item.SaveToString();
 
                         if (item.name != "No Name")
                         {
@@ -482,6 +484,7 @@ public class DataEditorTool : EditorWindow
                         var assetPath = AssetDatabase.GUIDToAssetPath(asset);
                         Spell spell = AssetDatabase.LoadAssetAtPath<Spell>(assetPath);
                         spellDict[spell.id] = spell;
+                        spell.SaveToString();
 
                         if (spell.name != "No Name")
                         {

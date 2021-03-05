@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bbc5f9a1dc1c8f49843806c2b0a2cc2, type: 3}
   m_Name: Chain sickle
   m_EditorClassIdentifier: 
+  sprite: {fileID: 21300000, guid: d5b1a56614ba23942bf538bf4ace9e25, type: 3}
   name: Chain sickle
   description: A sickle (similar to a pickaxe) joined to an iron handle by a chain.
   itemType: 0

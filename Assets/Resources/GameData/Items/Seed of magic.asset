@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bbc5f9a1dc1c8f49843806c2b0a2cc2, type: 3}
   m_Name: Seed of magic
   m_EditorClassIdentifier: 
+  sprite: {fileID: 21300000, guid: c540f3e424af5e84e9e3bdaeb050cf9e, type: 3}
   name: Seed of magic
   description: Permanently raises the maximum MP to whoever eats it.
   itemType: 2

@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bbc5f9a1dc1c8f49843806c2b0a2cc2, type: 3}
   m_Name: Seed of life
   m_EditorClassIdentifier: 
+  sprite: {fileID: 21300000, guid: 73b6bc9d16bb96141b2bcc95912cc9cd, type: 3}
   name: Seed of life
   description: Permanently raises the maximum HP to whoever eats it.
   itemType: 2

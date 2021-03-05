@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bbc5f9a1dc1c8f49843806c2b0a2cc2, type: 3}
   m_Name: Boxer shorts
   m_EditorClassIdentifier: 
+  sprite: {fileID: 21300000, guid: c585ad6a9edbb114d86f30b31ac3b8de, type: 3}
   name: Boxer shorts
   description: For those who love ghouls and ghosts.
   itemType: 1

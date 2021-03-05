@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bbc5f9a1dc1c8f49843806c2b0a2cc2, type: 3}
   m_Name: Divine dagger
   m_EditorClassIdentifier: 
+  sprite: {fileID: 21300000, guid: 44ec67c1d9b16c446b175644b0f3c84d, type: 3}
   name: Divine dagger
   description: In fact, a simple knife.
   itemType: 0

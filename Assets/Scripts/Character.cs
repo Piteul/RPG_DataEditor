@@ -8,6 +8,7 @@ public class Character : ScriptableObject
     public enum Class { Warrior, Mage, Dancer, Thief }
 
     public int id { get { return this.GetInstanceID(); } }
+    public Sprite sprite;
     public new string name;
     public Class characterClass;
     public int HP;
@@ -27,6 +28,7 @@ public class Character : ScriptableObject
 
     public void GetCopy(Character ch)
     {
+        this.sprite = ch.sprite;
         this.name = ch.name;
         this.characterClass = ch.characterClass;
         HP = ch.HP;
@@ -37,6 +39,11 @@ public class Character : ScriptableObject
         this.spells = ch.spells;
 
         SaveToString();
+    }
+
+    public Character DeepCopy()
+    {
+        return (Character) this.MemberwiseClone();
     }
 
     /// <summary>
@@ -70,6 +77,44 @@ public class Character : ScriptableObject
             this.spells.RemoveAll(item => !item);
         }
 
+    }
+
+    public override string ToString()
+    {
+        string inventoryString = "";
+        string spellsString = "";
+
+        if (inventory?.Count > 0)
+        {
+            inventoryString = "Inventory :";
+
+            for (int i = 0; i < inventory.Count - 1; i++)
+            {
+                inventoryString += (" " + inventory[i].name + ",");
+            }
+            inventoryString += (" " + inventory[inventory.Count - 1].name + ".");
+        }
+
+        if (spells?.Count > 0)
+        {
+            spellsString = "Spells :";
+            for (int i = 0; i < spells.Count - 1; i++)
+            {
+                spellsString += (" " + spells[i].name + ",");
+            }
+            spellsString += (" " + spells[spells.Count - 1].name + ".");
+        }
+
+        return "Name : " + name + "\n" +
+        "Class : " + characterClass.ToString() + "\n" +
+        "HP : " + HP.ToString() + "\n" +
+        "MP : " + MP.ToString() + "\n" +
+        "Attack : " + attack.ToString() + "\n" +
+        "Defence : " + defence.ToString() + "\n" +
+        "\n" +
+        inventoryString +
+        "\n" +
+        spellsString;
     }
 
 }

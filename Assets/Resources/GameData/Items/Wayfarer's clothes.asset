@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3bbc5f9a1dc1c8f49843806c2b0a2cc2, type: 3}
   m_Name: Wayfarer's clothes
   m_EditorClassIdentifier: 
+  sprite: {fileID: 21300000, guid: a8d28ff0e1769db4cb8b84cb93e888e3, type: 3}
   name: Wayfarer's clothes
   description: A sturdy, long blue sleeveless tunic made out of hemp, worn with a
     leather belt around the waist, and a blue cape.

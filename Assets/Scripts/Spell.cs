@@ -36,4 +36,11 @@ public class Spell : ScriptableObject
         return jsonRepresentation;
     }
 
+    public override string ToString()
+    {
+        return "Name : " + name + "\n" +
+        "Description : " + description + "\n" +
+        "Type : " + spellType.ToString();
+    }
+
 }

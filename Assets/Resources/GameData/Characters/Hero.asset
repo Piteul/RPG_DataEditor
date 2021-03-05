@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe51afb8a5249764fa2ed94a3a50c043, type: 3}
   m_Name: Hero
   m_EditorClassIdentifier: 
+  sprite: {fileID: 21300000, guid: f4b5c0d6cd094f946b0a73c4ae8f701e, type: 3}
   name: Hero
   characterClass: 2
   HP: 25
