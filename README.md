@@ -13,6 +13,8 @@ Although there is a semi-automatic data refresh, do not hesitate to use the Refr
 
 Finally, you find a set of prebuilt assets _to play with_.
 
+![RPGDataEditorTool1](Images\RPGDataEditorTool1.PNG "List Elements") ![RPGDataEditorTool2](Images\RPGDataEditorTool2.PNG "Edit Mode")
+
 ## How to Play
 
 At game launch, you will be invited to use the prompt system.
@@ -49,6 +51,8 @@ Here is the list of available commands :
 
 - RemoveSpell characterIndex spellIndex | Remove Spell characterIndex spellIndex / Where indexes are integers :
   Remove an Spell to a Character.
+
+  ![RPGDataEditorGame1](Images\RPGDataEditorGame1.PNG "Screenplay 1") ![RPGDataEditorGame2](Images\RPGDataEditorGame2.PNG "Screenplay 2")
 
 ## Time Spent
 
